@@ -20,6 +20,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'rol'
     ];
 
     /**
@@ -44,4 +45,9 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    public function renta(){ //OBTENER TODAS LAS RENTAS QUE HA HECHO EL USUARIO
+        return $this->hasMany('App\Models\Renta');
+    }
+
 }
