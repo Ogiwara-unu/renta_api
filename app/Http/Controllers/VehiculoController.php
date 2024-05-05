@@ -107,5 +107,13 @@ class VehiculoController extends Controller
         return response()->json($response,$response['status']);
     }
 
+    public function uploadImage(Request $request){
+
+    }
+
+    public function getImage($filename){
+
+    }
+
    
 }

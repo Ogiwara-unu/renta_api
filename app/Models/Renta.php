@@ -9,7 +9,7 @@ class Renta extends Model
 {
     use HasFactory;
     protected $table='renta';
-    protected $fillable=['id','user_id','cliente_id','vehiculo_placa','tarjeta_id','tarifa_base','fecha_entrega','fecha_devolucion','total'];
+    protected $fillable=['id','user_id','cliente_id','vehiculo_id','tarjeta_id','tarifa_base','fecha_entrega','fecha_devolucion','total'];
 
     public function user()
     {
@@ -23,7 +23,7 @@ class Renta extends Model
 
     public function vehiculo()
     {
-        return $this->belongsTo('App\Models\Vehiculo','placa_vehiculo');
+        return $this->belongsTo('App\Models\Vehiculo','vehiculo_id');
     }
 
     public function tarjeta()

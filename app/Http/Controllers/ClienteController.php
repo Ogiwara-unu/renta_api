@@ -18,7 +18,7 @@ class ClienteController extends Controller
         return response()->json($response,200);
     }
 
-    //Metodo POST de tarjeta
+    //Metodo POST de cliente
     public function store(Request $request){
         $data_input = $request->input('data', null);
         if ($data_input) {

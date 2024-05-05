@@ -3,9 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
-//Libreria para encriptar informacion delicada
-use Illuminate\Support\Facades\Crypt;
+use App\Helpers\JwtAuth;
 use App\Models\User;
 
 class UserController extends Controller
@@ -35,20 +33,19 @@ class UserController extends Controller
             $rules = [
                 'name' => 'required|alpha_num',
                 'email' => 'required|email|unique:users',
-                'password' => 'required|alpha_num|min:6'
+                'password' => 'required|alpha_num|min:6',
+                'rol' => 'required|alpha'
             ];
             
             $isValid = \validator($data,$rules);
             if(!$isValid->fails()){
                 
-                //Se Registran los datos en base de datos, encriptando los que son delicados por motivo de seguridad
-                $password = Crypt::encryptString($data['password']);
-                
                 //Creamos el objeto Usuario para proceder a guardarlo en la BD
                 $user = new User();
-                $user -> password = $password;
                 $user -> name = $data['name'];
                 $user -> email = $data['email'];
+                $user -> password = hash('sha256',$data['password']); //EL METODO DE CIFRADO ES sha256
+                $user -> rol = $data['rol'];
                 $user->save();
                 //Mensaje que indica que el Usuario se registro correctamente
                 $response = array(
@@ -115,6 +112,33 @@ class UserController extends Controller
 
         return response()->json($response,$response['status']);
     }
+
+    public function login(Request $request){
+        $data_input=$request->input('data',null);
+        $data=json_decode($data_input,true);
+        $data=array_map('trim',$data);
+        $rules=['email'=>'required','password'=>'required'];
+        $isValid=\validator($data,$rules);
+        if(!$isValid->fails()){
+            $jwt=new JwtAuth();
+            $response=$jwt->getToken($data['email'],$data['password']);
+            return response()->json($response);
+        }else{
+            $response=array(
+                'status'=>406,
+                'message'=>'Error en la validación de los datos',
+                'errors'=>$isValid->errors(),
+            );
+            return response()->json($response,406);
+        }
+
+    }
+    
+
+    public function getIdentity(Request $request){ //DEVUELVE CIERTA INFO DEL USUARIO QUE ESTE LOGGEADO
+
+    }
+
 }
 
 
