@@ -9,7 +9,7 @@ class Tarjeta extends Model
 {
     use HasFactory;
     protected $table='tarjeta';
-    protected $fillable=['numero_tarjeta','titular','fecha_vencimiento','cvv','cuatro_digitos'];
+    protected $fillable=['numero_tarjeta','titular','fecha_vencimiento','cvv','id'];
 
     public function renta(){ 
         return $this->hasMany('App\Models\Renta');

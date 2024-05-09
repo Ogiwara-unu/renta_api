@@ -32,7 +32,7 @@ class LicenciaController extends Controller
             }
 
             $rules = [
-                'id_licencia' => 'required|numeric',
+                'id' => 'required|numeric',
                 'cliente_id' => 'required|numeric', 
                 'fecha_vencimiento' => 'required|date',
                 'tipo' => 'required|alpha',
@@ -42,7 +42,7 @@ class LicenciaController extends Controller
             $isValid = \validator($data,$rules);
             if($isValid->fails()){
                 $licencia=new Licencia();
-                $licencia->id_licencia=$data['id_licencia'];
+                $licencia->id=$data['id'];
                 $licencia->cliente_id=$data['cliente_id'];
                 $licencia->fecha_vencimiento=$data['fecha_vencimiento'];
                 $licencia->tipo=$data['tipo'];
@@ -70,9 +70,9 @@ class LicenciaController extends Controller
     }
 
 
-    public function show($id_licencia){
+    public function show($id){
         
-        $data = Licencia::where('id_licencia', $id_licencia)->first();
+        $data = Licencia::where('id', $id)->first();
     
         if ($data) {
             $response = array(
@@ -93,9 +93,9 @@ class LicenciaController extends Controller
     }
 
 
-    public function destroy($id_licencia){
+    public function destroy($id){
         if(isset($id_licencia)){
-            $deleted=Licencia::where('id_licencia',$id_licencia)->delete();
+            $deleted=Licencia::where('id',$id)->delete();
             if($deleted){
                 $response=array(
                     'status'=>200,

@@ -32,7 +32,7 @@ class ClienteController extends Controller
             }
 
             $rules = [
-                'cedula' => 'required|numeric',
+                'id' => 'required|numeric',
                 'nombre' => 'required|alpha',
                 'primer_apellido' => 'required|alpha',
                 'segundo_apellido' => 'required|alpha',
@@ -44,7 +44,7 @@ class ClienteController extends Controller
             $isValid=\validator($data,$rules);
             if(!$isValid->fails()){ //SI NO FALLA
                 $cliente=new Cliente();
-                $cliente->cedula=$data['cedula'];
+                $cliente->id=$data['id'];
                 $cliente->nombre=$data['nombre'];
                 $cliente->primer_apellido=$data['primer_apellido'];
                 $cliente->segundo_apellido=$data['segundo_apellido'];
@@ -78,9 +78,9 @@ class ClienteController extends Controller
 
     //Metodo GET por medio del identificador
 
-    public function show($cedula){
+    public function show($id){
         //Se busca la tarjeta por medio de sus ultimos cuatro digitos
-        $data = Cliente::where('cedula', $cedula)->first();
+        $data = Cliente::where('id', $id)->first();
         //Si existe una tarjeta con esos ultimos cuatro digitos se mostrara con la informacion privada censurada
         if ($data) {
             $data=$data->load('licencia');
@@ -103,10 +103,10 @@ class ClienteController extends Controller
 
     //Metodo DELETE por medio del identificador
 
-    public function destroy($cedula){
+    public function destroy($id){
 
-        if(isset($cedula)){
-            $deleted=Cliente::where('cedula',$cedula)->delete();
+        if(isset($id)){
+            $deleted=Cliente::where('id',$id)->delete();
             if($deleted){
                 $response=array(
                     'status' => 200,

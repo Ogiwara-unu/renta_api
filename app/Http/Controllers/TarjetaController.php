@@ -47,13 +47,13 @@ class TarjetaController extends Controller
                 //Se Registran los datos en base de datos, encriptando los que son delicados por motivo de seguridad
                 $numero_tarjeta = Crypt::encryptString($data['numero_tarjeta']);
                 $cvv = Crypt::encryptString($data['cvv']);
-                $cuatro_digitos = substr($data['numero_tarjeta'], -4); // Obtener los últimos 4 dígitos
+                $id = substr($data['numero_tarjeta'], -4); // Obtener los últimos 4 dígitos
                 
                 //Creamos el objeto Tarjeta para proceder a guardarlo en la BD
                 $tarjeta = new Tarjeta();
                 $tarjeta -> numero_tarjeta = $numero_tarjeta;
                 $tarjeta -> cvv = $cvv;
-                $tarjeta -> cuatro_digitos = $cuatro_digitos;
+                $tarjeta -> id = $id;
                 $tarjeta -> titular = $data['titular'];
                 $tarjeta -> fecha_vencimiento = $data['fecha_vencimiento'];
                 $tarjeta->save();
@@ -83,9 +83,9 @@ class TarjetaController extends Controller
 
     //Metodo GET por medio del identificador
 
-    public function show($cuatro_digitos){
+    public function show($id){
         //Se busca la tarjeta por medio de sus ultimos cuatro digitos
-        $data = Tarjeta::where('cuatro_digitos', $cuatro_digitos)->first();
+        $data = Tarjeta::where('id', $id)->first();
         //Si existe una tarjeta con esos ultimos cuatro digitos se mostrara con la informacion privada censurada
         if ($data) {
             $data=$data->load('renta');
@@ -108,10 +108,10 @@ class TarjetaController extends Controller
 
     //Metodo DELETE por medio del identificador
 
-    public function destroy($cuatro_digitos){
+    public function destroy($id){
 
-        if(isset($cuatro_digitos)){
-            $deleted=Tarjeta::where('cuatro_digitos',$cuatro_digitos)->delete();
+        if(isset($id)){
+            $deleted=Tarjeta::where('id',$id)->delete();
             if($deleted){
                 $response=array(
                     'status' => 200,
@@ -129,27 +129,5 @@ class TarjetaController extends Controller
 
     }
 
-    //Metodo GET con el decriptador
-    /*public function show($id){
-        $tarjeta = Tarjeta::findOrFail($id);
-    
-        // Desencriptar los datos sensibles
-        $numero_tarjeta = Crypt::decryptString($tarjeta->numero_tarjeta);
-        $cvv = Crypt::decryptString($tarjeta->cvv);
-    
-        // Crear la respuesta
-        $response = [
-            'status' => 200,
-            'message' => 'Datos de la tarjeta desencriptados',
-            'tarjeta' => [
-                'numero_tarjeta' => $numero_tarjeta,
-                'cvv' => $cvv,
-                'cuatro_digitos' => $tarjeta->cuatro_digitos,
-                'titular' => $tarjeta->titular,
-                'fecha_vencimiento' => $tarjeta->fecha_vencimiento
-            ]
-        ];
-    
-        return response()->json($response, $response['status']);
-    }*/
+   
 }

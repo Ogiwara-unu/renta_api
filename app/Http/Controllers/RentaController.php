@@ -81,6 +81,7 @@ class RentaController extends Controller
             $data = Renta::where('id', $id)->first();
             
             if ($data) {
+                $data=$data->load('tarjeta');
                 $response = array(
                     'status' => 200,
                     'message' => 'Datos de la renta:',

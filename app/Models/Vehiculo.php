@@ -9,7 +9,7 @@ class Vehiculo extends Model
 {
     use HasFactory;
     protected $table='vehiculo';
-    protected $fillable=['placa','marca','modelo','transmision','precio','kilometraje','anio','estado','img'];
+    protected $fillable=['id','marca','modelo','transmision','precio','kilometraje','anio','estado','img'];
 
     public function renta(){ 
         return $this->hasMany('App\Models\Renta');

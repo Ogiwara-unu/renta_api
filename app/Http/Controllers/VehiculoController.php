@@ -25,7 +25,7 @@ class VehiculoController extends Controller
             $data=json_decode($data_input,true); //LO DECODIFICA DE JASON Y LO VUELVE UN ARREGLO
             $data=array_map('trim',$data); //SE LE APLICA UN ARRAY MAP A CADA DATO. TRIM ELIMINA LOS ESPACIOS VACIOS   
             $rules=[ //ESTABLECE LAS REGLAS PARA GUARDAR EL OBJ
-                'placa'=>'required|alpha_num', //TIPO REQUERIDO Y SOLO ACEPTA CAMPOS DE TEXTO
+                'id'=>'required|alpha_num', //TIPO REQUERIDO Y SOLO ACEPTA CAMPOS DE TEXTO
                 'marca'=>'required|alpha',
                 'modelo'=>'required|alpha_num',
                 'transmision'=>'required|alpha',
@@ -38,7 +38,7 @@ class VehiculoController extends Controller
             $isValid=\validator($data,$rules);
             if(!$isValid->fails()){ //SI NO FALLA
                 $vehiculo=new Vehiculo();
-                $vehiculo->placa=$data['placa'];
+                $vehiculo->id=$data['id'];
                 $vehiculo->marca=$data['marca'];
                 $vehiculo->modelo=$data['modelo'];
                 $vehiculo->transmision=$data['transmision'];
@@ -71,27 +71,28 @@ class VehiculoController extends Controller
 
     }
 
-    public function show($placa){
-        $data = Vehiculo::where('placa', $placa)->first();
-    if ($data) {
-        $data=$data->load('renta');
-        $response = array(
+    public function show($id){
+        $data = Vehiculo::where('placa', $id)->first();
+        if ($data) {
+            // var_dump($data);
+            $data=$data->load('renta');
+            $response = array(
             'status' => 200,
             'message' => 'Datos del vehiculo',
             'Vehiculo' => $data
-        );
-    } else {
-        $response = array(
+            );
+        } else {
+            $response = array(
             'status' => 400,
             'message' => 'Recurso no encontrado'
-        );
+            );
+        }
+        return response()->json($response, $response['status']);
     }
-    return response()->json($response, $response['status']);
-}
 
-    public function destroy($placa){
-        if(isset($placa)){
-            $deleted=Vehiculo::where('placa',$placa)->delete();
+    public function destroy($id){
+        if(isset($id)){
+            $deleted=Vehiculo::where('id',$id)->delete();
             if($deleted){
                 $response=array(
                     'status'=>200,
