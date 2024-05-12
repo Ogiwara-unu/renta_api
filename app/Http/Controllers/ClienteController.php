@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Cliente;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 
 class ClienteController extends Controller
@@ -123,4 +124,92 @@ class ClienteController extends Controller
         return response()->json($response,$response['status']);
 
     }
+
+    public function update(Request $request, $id){
+        // Buscar el cliente por su identificador
+        $cliente = Cliente::find($id);
+    
+        // Verificar si el cliente existe
+        if ($cliente) {
+            $data_input = $request->input('data', null);
+    
+            if ($data_input) {
+                // Decodificar los datos de entrada si están en formato JSON
+                if(is_array($data_input)){
+                    $data = array_map('trim', $data_input);
+                } else {
+                    $data = json_decode($data_input, true);
+                    $data = array_map('trim', $data);
+                }
+    
+                // Validar los datos de entrada
+                $rules = [
+                    'nombre' => 'alpha',
+                    'primer_apellido' => 'alpha',
+                    'segundo_apellido' => 'alpha',
+                    'telefono' => 'alpha_num',
+                    'email' => 'email|unique:clientes,email,'.$cliente->id,
+                    'direccion' => 'alpha_num',
+                    'fecha_nacimiento' => 'date'
+                ];
+    
+                $validator = Validator::make($data, $rules);
+    
+                if (!$validator->fails()) {
+                    // Actualizar los campos del cliente
+                    if (isset($data['nombre'])) {
+                        $cliente->nombre = $data['nombre'];
+                    }
+                    if (isset($data['primer_apellido'])) {
+                        $cliente->primer_apellido = $data['primer_apellido'];
+                    }
+                    if (isset($data['segundo_apellido'])) {
+                        $cliente->segundo_apellido = $data['segundo_apellido'];
+                    }
+                    if (isset($data['telefono'])) {
+                        $cliente->telefono = $data['telefono'];
+                    }
+                    if (isset($data['email'])) {
+                        $cliente->email = $data['email'];
+                    }
+                    if (isset($data['direccion'])) {
+                        $cliente->direccion = $data['direccion'];
+                    }
+                    if (isset($data['fecha_nacimiento'])) {
+                        $cliente->fecha_nacimiento = $data['fecha_nacimiento'];
+                    }
+    
+                    // Guardar los cambios en la base de datos
+                    $cliente->save();
+    
+                    $response = [
+                        'status' => 200,
+                        'message' => 'Cliente actualizado Bv',
+                        'cliente' => $cliente
+                    ];
+                } else {
+                    $response = [
+                        'status' => 406,
+                        'message' => 'Datos inválidos :v',
+                        'errors' => $validator->errors()
+                    ];
+                }
+            } else {
+                $response = [
+                    'status' => 400,
+                    'message' => 'No se encontraron datos para actualizar :v'
+                ];
+            }
+        } else {
+            $response = [
+                'status' => 404,
+                'message' => 'Cliente no encontrado :v'
+            ];
+        }
+    
+        return response()->json($response, $response['status']);
+    }
+    
+
+    
 }

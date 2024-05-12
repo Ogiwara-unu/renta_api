@@ -129,5 +129,79 @@ class TarjetaController extends Controller
 
     }
 
+    public function update(Request $request, $id){
+        // Buscar la tarjeta por su identificador
+        $tarjeta = Tarjeta::where('id', $id)->first();
+    
+        // Verificar si la tarjeta existe
+        if ($tarjeta) {
+            $data_input = $request->input('data', null);
+    
+            if ($data_input) {
+                // Decodificar los datos de entrada si están en formato JSON
+                if(is_array($data_input)){
+                    $data = array_map('trim', $data_input);
+                } else {
+                    $data = json_decode($data_input, true);
+                    $data = array_map('trim', $data);
+                }
+    
+                // Validar los datos de entrada
+                $rules = [
+                    'numero_tarjeta' => 'alpha_num',
+                    'titular' => 'alpha',
+                    'fecha_vencimiento' => 'date',
+                    'cvv' => 'alpha_num'
+                ];
+    
+                $isValid = \validator($data, $rules);
+    
+                if (!$isValid->fails()) {
+                    // Actualizar los campos de la tarjeta
+                    if (isset($data['numero_tarjeta'])) {
+                        $tarjeta->numero_tarjeta = Crypt::encryptString($data['numero_tarjeta']);
+                    }
+                    if (isset($data['cvv'])) {
+                        $tarjeta->cvv = Crypt::encryptString($data['cvv']);
+                    }
+                    if (isset($data['titular'])) {
+                        $tarjeta->titular = $data['titular'];
+                    }
+                    if (isset($data['fecha_vencimiento'])) {
+                        $tarjeta->fecha_vencimiento = $data['fecha_vencimiento'];
+                    }
+    
+                    // Guardar los cambios en la base de datos
+                    $tarjeta->save();
+    
+                    $response = [
+                        'status' => 200,
+                        'message' => 'Tarjeta actualizada >:3',
+                        'tarjeta' => $tarjeta
+                    ];
+                } else {
+                    $response = [
+                        'status' => 406,
+                        'message' => 'Datos inválidos :3',
+                        'errors' => $isValid->errors()
+                    ];
+                }
+            } else {
+                $response = [
+                    'status' => 400,
+                    'message' => 'No se encontraron datos para actualizar :3'
+                ];
+            }
+        } else {
+            $response = [
+                'status' => 404,
+                'message' => 'Tarjeta no encontrada :3'
+            ];
+        }
+    
+        return response()->json($response, $response['status']);
+    }
+    
+
    
 }

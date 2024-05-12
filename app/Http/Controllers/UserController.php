@@ -113,6 +113,73 @@ class UserController extends Controller
         return response()->json($response,$response['status']);
     }
 
+    public function update(Request $request, $email){
+        $user = User::where('email', $email)->first();
+        if ($user) {
+            $data_input = $request->input('data', null);
+            if ($data_input) {
+                if(is_array($data_input)){
+                    $data = array_map('trim', $data_input);
+                } else {
+                    $data = json_decode($data_input, true);
+                    $data = array_map('trim', $data);
+                }
+                $rules = [
+                    'name' => 'alpha_num',
+                    'email' => 'email|unique:users,email,'.$user->id,
+                    'password' => 'alpha_num|min:6',
+                    'rol' => 'alpha'
+                ];
+    
+                $isValid = \validator($data, $rules);
+    
+                if (!$isValid->fails()) {
+                    // Actualizar los campos del usuario
+                    if (isset($data['name'])) {
+                        $user->name = $data['name'];
+                    }
+                    if (isset($data['email'])) {
+                        $user->email = $data['email'];
+                    }
+                    if (isset($data['password'])) {
+                        $user->password = hash('sha256', $data['password']);
+                    }
+                    if (isset($data['rol'])) {
+                        $user->rol = $data['rol'];
+                    }
+    
+                    // Guardar los cambios en la base de datos
+                    $user->save();
+    
+                    $response = [
+                        'status' => 200,
+                        'message' => 'Usuario actualizado :)',
+                        'user' => $user
+                    ];
+                } else {
+                    $response = [
+                        'status' => 406,
+                        'message' => 'Datos inválidos >:(',
+                        'errors' => $isValid->errors()
+                    ];
+                }
+            } else {
+                $response = [
+                    'status' => 400,
+                    'message' => 'No se encontraron datos para actualizar >:('
+                ];
+            }
+        } else {
+            $response = [
+                'status' => 404,
+                'message' => 'Usuario no encontrado >:('
+            ];
+        }
+    
+        return response()->json($response, $response['status']);
+    }
+    
+
     public function login(Request $request){
         $data_input=$request->input('data',null);
         $data=json_decode($data_input,true);
@@ -136,7 +203,17 @@ class UserController extends Controller
     
 
     public function getIdentity(Request $request){ //DEVUELVE CIERTA INFO DEL USUARIO QUE ESTE LOGGEADO
-
+        $jwt=new JwtAuth();
+        $token=$request->header('bearertoken'); //ENCABEZADO
+        if(isset($token)){
+            $response=$jwt->checkToken($token,true);
+        }else{
+            $response=array(
+                'status'=>404,
+                'message'=>'token (bearertoken) no encontrado',
+            );
+        }
+        return response()->json($response);
     }
 
 }

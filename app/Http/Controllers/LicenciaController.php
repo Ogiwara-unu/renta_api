@@ -4,6 +4,11 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Response; 
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Str; 
+
 use App\Models\Licencia;
 
 class LicenciaController extends Controller
@@ -46,7 +51,7 @@ class LicenciaController extends Controller
                 $licencia->cliente_id=$data['cliente_id'];
                 $licencia->fecha_vencimiento=$data['fecha_vencimiento'];
                 $licencia->tipo=$data['tipo'];
-                $licencia->img=$data['img'];
+                $licencia->img=$data['img']; //HAY QUE VERIFICAR QUE LA IMG EXISTA EN LA CARPETA STORAGE PUBLIC LICENCIAS
                 $licencia->save();
                 $response=array(
                     'status'=>201, //CODIGO PARA EL EXITO
@@ -110,4 +115,47 @@ class LicenciaController extends Controller
         }
         return response()->json($response,$response['status']);
     }
+
+    public function uploadImage(Request $request){  
+        $isValid=Validator::make($request->all(),['file0'=>'required|image|mimes:jpg,png,jpeg,svg']);
+        if(!$isValid->fails()){
+            $image=$request->file('file0');
+            $filename=Str::uuid().".".$image->getClientOriginalExtension(); //SE CONCATENA LO QUE LA IMG TIENE POR EXTENSION
+            Storage::disk('licencias')->put($filename,File::get($image));
+            $response=array(
+                'status'=>201,
+                'message'=>'Imagen guardada',
+                'filename'=>$filename,
+            );
+        }else{
+            $response=array(
+                'status'=>406,
+                'message'=>'Error: no se encontro el archivo',
+                'errors'=>$isValid->errors(),
+            );
+        }
+        return response()->json($response,$response['status']);
+    }
+
+    public function getImage($filename){
+        if(isset($filename)){
+            $exist=Storage::disk('licencias')->exists($filename);
+            if($exist){
+                $file=Storage::disk('licencias')->get($filename);
+                return new Response($file,200); //RETORNA LA IMG, POR ESO SE USA LA CLASE RESPONSE
+            }else{
+                $response=array(
+                    'status'=>404,
+                    'message'=>'Imagen no existe',
+                );
+            }
+        }else{
+            $response=array(
+                'status'=>406,
+                'message'=>'No se definió el nombre de la imagen',
+            );
+        }
+        return response()->json($response,$response['status']);
+    }
+    
 }

@@ -44,6 +44,23 @@ return [
             'throw' => false,
         ],
 
+        //SE GENERAN LOS DISCOS
+        'licencias' => [
+            'driver' => 'local',
+            'root' => storage_path('app/public/licencias'), //CARPETA LICENCIAS PARA GUARDAR IMG DE LA LICENCIA
+            'url' => env('APP_URL').'/storage',
+            'visibility' => 'public',
+            'throw' => false,
+        ],
+
+        'vehiculos' => [
+            'driver' => 'local',
+            'root' => storage_path('app/public/vehiculos'), //CARPETA VEHICULOS PARA GUARDAR IMG DE LOS VEHICULOS
+            'url' => env('APP_URL').'/storage',
+            'visibility' => 'public',
+            'throw' => false,
+        ],
+
         's3' => [
             'driver' => 's3',
             'key' => env('AWS_ACCESS_KEY_ID'),

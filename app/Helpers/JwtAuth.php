@@ -15,30 +15,31 @@ class JwtAuth{
         $this->key="aswqdfewqeddafe23ewresa";
     }
 
-    public function getToken($email,$password){
-        $pass=hash('sha256',$password);
-        // var_dump($pass);
-        //SE OBTIENE EL USUARIO CON EL EMAIL Y SE LE APLICA EL HASH CON EL TIPO DE CIFRADO QUE ESCOGIMOS ANTERIORMENTE A LA PASSWORD
-        $user=User::where(['email'=>$email,'password'=>$password])->first();
-        // var_dump($user);
-        if(is_object($user)){
-            $token=array( //EL ALGORITMO IDENTIFICA ESTO COMO PAYLOAD EN VEZ DE TOKEN PERO SE VA A DEJAR COMO TOKEN
-                'iss'=>$user->id,
-                'email'=>$user->email,
-                'name'=>$user->name,
-                'rol'=>$user->rol,
-                'iat'=>time(),
-                'exp'=>time()+(2000)
-            );
-            $data=JWT::encode($token,$this->key,'HS256'); //SE GENERA LA FIRMA DEL TOKEN
-        }else{
-            $data=array(
-                'status'=>401,
-                'message'=>'Datos de autenticación incorrectos'
-            );
+    public function getToken($email, $password) {
+        $hashedPassword = hash('sha256', $password);
+        $user = User::where('email', $email)->first();
+    
+        if ($user && hash_equals($user->password, $hashedPassword)) {
+            $token = [
+                'iss' => $user->id,
+                'email' => $user->email,
+                'name' => $user->name,
+                'rol' => $user->rol,
+                'iat' => time(),
+                'exp' => time() + 2000
+            ];
+    
+            $data = JWT::encode($token, $this->key, 'HS256');
+        } else {
+            $data = [
+                'status' => 401,
+                'message' => 'Datos de autenticación incorrectos'
+            ];
         }
+    
         return $data;
     }
+    
 
     //OBTIENE LA VERIFICACION DEL TOKEN Y SE OBTIENEN LOS DATOS DEL TOKEN CIFRADO
     public function checkToken($jwt,$getId=false){
