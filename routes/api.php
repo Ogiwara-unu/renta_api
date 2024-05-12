@@ -27,10 +27,13 @@ Route::prefix('v1')->group(
         Route::get('/licencia/getImage/{filename}',[LicenciaController::class,'getImage'])->middleware(ApiAuthMiddleware::class);
         Route::put('/licencia/{id}', [LicenciaController::class, 'update']);
 
-        Route::post('/vehiculo/upload',[LicenciaController::class,'uploadImage'])->middleware(ApiAuthMiddleware::class);
+        Route::post('/vehiculo',[VehiculoController::class, 'store'])->middleware(ApiAuthMiddleware::class);
+        Route::post('/vehiculo/upload',[VehiculoController::class,'uploadImage'])->middleware(ApiAuthMiddleware::class);
         Route::get('/vehiculo/getImage/{filename}',[VehiculoController::class,'getImage'])->middleware(ApiAuthMiddleware::class);
-        Route::put('/vehiculo/{id}', [VehiculoController::class, 'update']);
+        Route::put('/vehiculo/{id}', [VehiculoController::class, 'update'])->middleware(ApiAuthMiddleware::class);
         Route::get('/vehiculo/{id}', [VehiculoController::class, 'show']);
+        Route::delete('/vehiculo/{id}', [VehiculoController::class, 'destroy'])->middleware(ApiAuthMiddleware::class);
+      
 
         //CUANDO SE AGREGA UN MIDDLEWARE PARA ESTE TIPO DE RUTAS HAY QUE TENER "CUIDADO"
         //PORQUE SI EXISTE UNA RUTA RESTFUL, ESTA NO VA A PERMITIR QUE SE EJECUTE BIEN LA RUTA CON MIDDLEWARE

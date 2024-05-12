@@ -116,6 +116,69 @@ class LicenciaController extends Controller
         return response()->json($response,$response['status']);
     }
 
+    public function update(Request $request, $id){
+        // Obtener los datos de la solicitud
+        $data_input = $request->input('data', null);
+    
+        if($data_input){
+            // Verificar si los datos son un arreglo o una cadena JSON
+            if(is_array($data_input)){
+                $data = array_map('trim', $data_input);
+            }else{
+                $data = json_decode($data_input, true);
+                $data = array_map('trim', $data);
+            }
+    
+            // Definir las reglas de validación
+            $rules = [
+                'fecha_vencimiento' => 'date',
+                'tipo' => 'alpha',
+                'img' => 'alpha_num',
+            ];
+    
+            // Validar los datos recibidos
+            $isValid = \validator($data, $rules);
+    
+            if($isValid->fails()){
+                $response = [
+                    'status' => 406,
+                    'message' => 'Datos inválidos',
+                    'errors' => $isValid->errors(),
+                ];
+            }else{
+                // Buscar la licencia por su ID
+                $licencia = Licencia::find($id);
+    
+                if($licencia){
+                    // Actualizar los campos de la licencia
+                    $licencia->fill($data);
+    
+                    // Guardar los cambios en la base de datos
+                    $licencia->save();
+    
+                    $response = [
+                        'status' => 200,
+                        'message' => 'Licencia actualizada correctamente',
+                        'licencia' => $licencia,
+                    ];
+                }else{
+                    $response = [
+                        'status' => 404,
+                        'message' => 'Licencia no encontrada',
+                    ];
+                }
+            }
+        }else{
+            $response = [
+                'status' => 400,
+                'message' => 'No se encontró el objeto data',
+            ];
+        }
+    
+        return response()->json($response, $response['status']);
+    }
+    
+
     public function uploadImage(Request $request){  
         $isValid=Validator::make($request->all(),['file0'=>'required|image|mimes:jpg,png,jpeg,svg']);
         if(!$isValid->fails()){

@@ -193,7 +193,7 @@ class UserController extends Controller
         }else{
             $response=array(
                 'status'=>406,
-                'message'=>'Error en la validación de los datos',
+                'message'=>'Error en la validación de los datos >:(',
                 'errors'=>$isValid->errors(),
             );
             return response()->json($response,406);
@@ -210,7 +210,7 @@ class UserController extends Controller
         }else{
             $response=array(
                 'status'=>404,
-                'message'=>'token (bearertoken) no encontrado',
+                'message'=>'token (bearertoken) no encontrado >:(',
             );
         }
         return response()->json($response);

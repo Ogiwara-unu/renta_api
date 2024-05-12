@@ -134,15 +134,12 @@ class ClienteController extends Controller
             $data_input = $request->input('data', null);
     
             if ($data_input) {
-                // Decodificar los datos de entrada si están en formato JSON
                 if(is_array($data_input)){
                     $data = array_map('trim', $data_input);
                 } else {
                     $data = json_decode($data_input, true);
                     $data = array_map('trim', $data);
                 }
-    
-                // Validar los datos de entrada
                 $rules = [
                     'nombre' => 'alpha',
                     'primer_apellido' => 'alpha',

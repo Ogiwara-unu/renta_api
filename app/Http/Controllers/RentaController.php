@@ -130,15 +130,12 @@ class RentaController extends Controller
                     $data_input = $request->input('data', null);
             
                     if ($data_input) {
-                        // Decodificar los datos de entrada si están en formato JSON
                         if(is_array($data_input)){
                             $data = array_map('trim', $data_input);
                         } else {
                             $data = json_decode($data_input, true);
                             $data = array_map('trim', $data);
                         }
-            
-                        // Validar los datos de entrada
                         $rules = [
                             'cliente_id' => 'numeric',
                             'vehiculo_id' => 'alpha_num',
@@ -152,7 +149,6 @@ class RentaController extends Controller
                         $isValid = \validator($data, $rules);
             
                         if (!$isValid->fails()) {
-                            // Actualizar los campos de la renta
                             if (isset($data['cliente_id'])) {
                                 $renta->cliente_id = $data['cliente_id'];
                             }

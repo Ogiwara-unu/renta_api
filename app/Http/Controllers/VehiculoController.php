@@ -30,7 +30,7 @@ class VehiculoController extends Controller
             $data=json_decode($data_input,true); //LO DECODIFICA DE JASON Y LO VUELVE UN ARREGLO
             $data=array_map('trim',$data); //SE LE APLICA UN ARRAY MAP A CADA DATO. TRIM ELIMINA LOS ESPACIOS VACIOS   
             $rules=[ //ESTABLECE LAS REGLAS PARA GUARDAR EL OBJ
-                'id'=>'required|alpha_num', //TIPO REQUERIDO Y SOLO ACEPTA CAMPOS DE TEXTO
+                'placa' => 'required|unique:vehiculo', //TIPO REQUERIDO Y SOLO ACEPTA CAMPOS DE TEXTO
                 'marca'=>'required|alpha',
                 'modelo'=>'required|alpha_num',
                 'transmision'=>'required|alpha',
@@ -43,7 +43,7 @@ class VehiculoController extends Controller
             $isValid=\validator($data,$rules);
             if(!$isValid->fails()){ //SI NO FALLA
                 $vehiculo=new Vehiculo();
-                $vehiculo->id=$data['id'];
+                $vehiculo->placa=$data['placa'];
                 $vehiculo->marca=$data['marca'];
                 $vehiculo->modelo=$data['modelo'];
                 $vehiculo->transmision=$data['transmision'];
@@ -97,7 +97,7 @@ class VehiculoController extends Controller
 
     public function destroy($id){
         if(isset($id)){
-            $deleted=Vehiculo::where('id',$id)->delete();
+            $deleted=Vehiculo::where('placa',$id)->delete();
             if($deleted){
                 $response=array(
                     'status'=>200,
@@ -107,19 +107,19 @@ class VehiculoController extends Controller
         }else{
             $response=array(
                 'status'=>400,
-                'message'=>'No se pudo eliminar el recurso,compruebe que exista'
+                'message'=>'No se pudo eliminar el recurso,compruebe que exista :,v'
             );  
         }
         return response()->json($response,$response['status']);
     }
 
-    public function update(Request $request, $id){
+    public function update(Request $request, $placa){  //ACTUALIZA POR MEDIO DE LA PLACA
         $data_input=$request->input('data',null);
         if($data_input){
             $data=json_decode($data_input,true);
             $data=array_map('trim',$data);
             $rules=[
-                'id'=>'required|alpha_num',
+                'placa'=>'required|alpha_num', 
                 'marca'=>'required|alpha',
                 'modelo'=>'required|alpha_num',
                 'transmision'=>'required|alpha',
@@ -131,9 +131,10 @@ class VehiculoController extends Controller
             ];
             $isValid=Validator::make($data,$rules);
             if(!$isValid->fails()){
-                $vehiculo=Vehiculo::find($id);
+                $vehiculo=Vehiculo::where('placa', $placa)->first();
                 if($vehiculo){
-                    $vehiculo->id=$data['id'];
+                    // Actualiza los datos del vehículo
+                    $vehiculo->placa=$data['placa'];
                     $vehiculo->marca=$data['marca'];
                     $vehiculo->modelo=$data['modelo'];
                     $vehiculo->transmision=$data['transmision'];
@@ -171,6 +172,8 @@ class VehiculoController extends Controller
         return response()->json($response,$response['status']);
     
     }
+    
+    
     
 
     public function uploadImage(Request $request){  
