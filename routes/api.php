@@ -10,57 +10,36 @@ use App\Http\Controllers\RentaController;
 use App\Http\Controllers\LicenciaController;
 use App\Http\Middleware\ApiAuthMiddleware;
 
+Route::prefix('v1')->group(function () {
+    // Rutas específicas
+    Route::post('/user/login', [UserController::class,'login']);
+    Route::get('/user/getidentity', [UserController::class,'getIdentity'])->middleware(ApiAuthMiddleware::class);
+    Route::put('/user/{email}', [UserController::class, 'update'])->middleware(ApiAuthMiddleware::class);
 
-// Route::get('/user', function (Request $request) {
-//     return $request->user();
-// })->middleware('auth:sanctum');
+    Route::post('/licencia/upload', [LicenciaController::class,'uploadImage'])->middleware(ApiAuthMiddleware::class);
+    Route::get('/licencia/getImage/{filename}', [LicenciaController::class,'getImage'])->middleware(ApiAuthMiddleware::class);
+    Route::put('/licencia/{id}', [LicenciaController::class, 'update'])->middleware(ApiAuthMiddleware::class);
 
-Route::prefix('v1')->group(
-    function(){
-        //RUTAS ESPECIFICAS 
-        //POR SER DATOS SENSIBLES SE MANDA POR MEDIO DE POST
-        Route::post('/user/login',[UserController::class,'login']);
-        Route::get('/user/getidentity',[UserController::class,'getIdentity'])->middleware(ApiAuthMiddleware::class);
-        Route::put('/user/{email}', [UserController::class, 'update']);
+    Route::post('/vehiculo', [VehiculoController::class, 'store'])->middleware(ApiAuthMiddleware::class);
+    Route::post('/vehiculo/upload', [VehiculoController::class,'uploadImage'])->middleware(ApiAuthMiddleware::class);
+    Route::get('/vehiculo/getImage/{filename}', [VehiculoController::class,'getImage'])->middleware(ApiAuthMiddleware::class);
+    Route::put('/vehiculo/{id}', [VehiculoController::class, 'update'])->middleware(ApiAuthMiddleware::class);
+    Route::get('/vehiculo/{id}', [VehiculoController::class, 'show'])->middleware(ApiAuthMiddleware::class);
+    Route::delete('/vehiculo/{id}', [VehiculoController::class, 'destroy'])->middleware(ApiAuthMiddleware::class);
 
-        Route::post('/licencia/upload',[LicenciaController::class,'uploadImage'])->middleware(ApiAuthMiddleware::class);
-        Route::get('/licencia/getImage/{filename}',[LicenciaController::class,'getImage'])->middleware(ApiAuthMiddleware::class);
-        Route::put('/licencia/{id}', [LicenciaController::class, 'update']);
+    Route::post('/renta', [RentaController::class,'store'])->middleware(ApiAuthMiddleware::class);
+    Route::put('/renta/{id}', [RentaController::class, 'update'])->middleware(ApiAuthMiddleware::class);
+    Route::get('/renta', [RentaController::class, 'index'])->middleware(ApiAuthMiddleware::class);
+    Route::get('/renta/{id}', [RentaController::class, 'show'])->middleware(ApiAuthMiddleware::class);
 
-        Route::post('/vehiculo',[VehiculoController::class, 'store'])->middleware(ApiAuthMiddleware::class);
-        Route::post('/vehiculo/upload',[VehiculoController::class,'uploadImage'])->middleware(ApiAuthMiddleware::class);
-        Route::get('/vehiculo/getImage/{filename}',[VehiculoController::class,'getImage'])->middleware(ApiAuthMiddleware::class);
-        Route::put('/vehiculo/{id}', [VehiculoController::class, 'update'])->middleware(ApiAuthMiddleware::class);
-        Route::get('/vehiculo/{id}', [VehiculoController::class, 'show']);
-        Route::delete('/vehiculo/{id}', [VehiculoController::class, 'destroy'])->middleware(ApiAuthMiddleware::class);
-      
+    Route::put('/tarjeta/{id}', [TarjetaController::class, 'update'])->middleware(ApiAuthMiddleware::class);
 
-        //CUANDO SE AGREGA UN MIDDLEWARE PARA ESTE TIPO DE RUTAS HAY QUE TENER "CUIDADO"
-        //PORQUE SI EXISTE UNA RUTA RESTFUL, ESTA NO VA A PERMITIR QUE SE EJECUTE BIEN LA RUTA CON MIDDLEWARE
-        Route::post('/renta',[RentaController::class,'store'])->middleware(ApiAuthMiddleware::class);
-        Route::put('/renta/{id}', [VehiculoController::class, 'update']);
+    Route::put('/cliente/{id}', 'ClienteController@update')->middleware(ApiAuthMiddleware::class);
 
-        Route::put('/tarjeta/{id}', [VehiculoController::class, 'update']);
+    // Rutas automáticas RESTful
+    Route::resource('/cliente', ClienteController::class, ['except' => ['create', 'edit']])->middleware(ApiAuthMiddleware::class);
+    Route::resource('/tarjeta', TarjetaController::class, ['except' => ['create', 'edit']])->middleware(ApiAuthMiddleware::class);
+    Route::resource('/user', UserController::class, ['except' => ['create', 'edit']])->middleware(ApiAuthMiddleware::class);
+    Route::resource('/licencia', LicenciaController::class, ['except' => ['create','edit']])->middleware(ApiAuthMiddleware::class);
+});
 
-        Route::put('/clientes/{id}', 'ClienteController@update');
-    
-        //RUTAS AUTOMATICAS restful
-         //RUTA DE VEHICULO
-        // Route::resource('/vehiculo',VehiculoController::class,['except'=>['create','edit']]); //SE EXCLUYEN CREATE Y EDIT POR OBSOLETOS JIJIJ y POR MOTIVOS DE SEGURIDAD
-
-         //RUTA DE CLIENTE
-         Route::resource('/cliente', ClienteController::class, ['except' => ['create', 'edit']]);
-
-        //RUTA DE TARJETA
-        Route::resource('/tarjeta', TarjetaController::class, ['except' => ['create', 'edit']]);
-
-        //RUTA DE USERS
-        Route::resource('/users', UserController::class, ['except' => ['create', 'edit']]);//->middleware(ApiAuthMiddleware::class);
-
-        //RUTA DE RENTA
-        // Route::resource('/renta', RentaController::class, ['except' => ['create', 'edit']]);
-        
-         //RUTA DE LICENCIA
-        Route::resource('/licencia', LicenciaController::class, ['except' => ['create','edit']]);
-    }
-    );
