@@ -11,6 +11,14 @@ class User extends Authenticatable
 {
     use HasFactory, Notifiable;
 
+     /**
+     * Lelany Fernandez Carvajal
+     * Christian Jafeth Espinoza
+     * Randall Alvarez Chevez
+     */
+
+
+
     /**
      * The attributes that are mass assignable.
      *
