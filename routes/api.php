@@ -13,6 +13,7 @@ use App\Http\Middleware\ApiAuthMiddleware;
 Route::prefix('v1')->group(function () {
     // Rutas específicas
     Route::post('/user/login', [UserController::class,'login']);
+    Route::post('/user/signup', [UserController::class,'store']); //RUTA SINGUP DONDE SE EJECUTA EL METODO STORE
     Route::get('/user/getidentity', [UserController::class,'getIdentity'])->middleware(ApiAuthMiddleware::class);
     Route::put('/user/{email}', [UserController::class, 'update'])->middleware(ApiAuthMiddleware::class);
 
@@ -34,7 +35,7 @@ Route::prefix('v1')->group(function () {
 
     Route::put('/tarjeta/{id}', [TarjetaController::class, 'update'])->middleware(ApiAuthMiddleware::class);
 
-    Route::put('/cliente/{id}', 'ClienteController@update')->middleware(ApiAuthMiddleware::class);
+    Route::put('/cliente/{id}',  [ClienteController::class, 'update'])->middleware(ApiAuthMiddleware::class);
 
     // Rutas automáticas RESTful
     Route::resource('/cliente', ClienteController::class, ['except' => ['create', 'edit']])->middleware(ApiAuthMiddleware::class);
