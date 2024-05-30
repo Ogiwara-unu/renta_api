@@ -22,6 +22,7 @@ Route::prefix('v1')->group(function () {
     Route::put('/licencia/{id}', [LicenciaController::class, 'update'])->middleware(ApiAuthMiddleware::class);
 
     Route::post('/vehiculo', [VehiculoController::class, 'store'])->middleware(ApiAuthMiddleware::class);
+    Route::get('/vehiculo/getCars', [VehiculoController::class, 'index']);
     Route::post('/vehiculo/upload', [VehiculoController::class,'uploadImage'])->middleware(ApiAuthMiddleware::class);
     Route::get('/vehiculo/getImage/{filename}', [VehiculoController::class,'getImage'])->middleware(ApiAuthMiddleware::class);
     Route::put('/vehiculo/{id}', [VehiculoController::class, 'update'])->middleware(ApiAuthMiddleware::class);
