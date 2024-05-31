@@ -24,7 +24,7 @@ Route::prefix('v1')->group(function () {
     Route::post('/vehiculo', [VehiculoController::class, 'store'])->middleware(ApiAuthMiddleware::class);
     Route::get('/vehiculo/getCars', [VehiculoController::class, 'index']);
     Route::post('/vehiculo/upload', [VehiculoController::class,'uploadImage'])->middleware(ApiAuthMiddleware::class);
-    Route::get('/vehiculo/getImage/{filename}', [VehiculoController::class,'getImage'])->middleware(ApiAuthMiddleware::class);
+    Route::get('/vehiculo/getImage/{filename}', [VehiculoController::class,'getImage']);
     Route::put('/vehiculo/{id}', [VehiculoController::class, 'update'])->middleware(ApiAuthMiddleware::class);
     Route::get('/vehiculo/{id}', [VehiculoController::class, 'show'])->middleware(ApiAuthMiddleware::class);
     Route::delete('/vehiculo/{id}', [VehiculoController::class, 'destroy'])->middleware(ApiAuthMiddleware::class);
