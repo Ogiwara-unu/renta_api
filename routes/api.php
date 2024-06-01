@@ -14,6 +14,7 @@ Route::prefix('v1')->group(function () {
     // Rutas específicas
     Route::post('/user/login', [UserController::class,'login']);
     Route::post('/user/signup', [UserController::class,'store']); //RUTA SINGUP DONDE SE EJECUTA EL METODO STORE
+    Route::post('/user/add', [UserController::class,'store'])->middleware(ApiAuthMiddleware::class);
     Route::get('/user/getidentity', [UserController::class,'getIdentity'])->middleware(ApiAuthMiddleware::class);
     Route::put('/user/{email}', [UserController::class, 'update'])->middleware(ApiAuthMiddleware::class);
 
