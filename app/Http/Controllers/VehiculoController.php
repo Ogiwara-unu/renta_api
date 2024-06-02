@@ -27,8 +27,14 @@ class VehiculoController extends Controller
     public function store(Request $request){ //USA EL METODO POST PARA CREAR UN REGISTRO
         $data_input=$request->input('data',null); //LAS OBTIENE POR MEDIO DE UN METODO DE ENTRADA
         if($data_input){
-            $data=json_decode($data_input,true); //LO DECODIFICA DE JASON Y LO VUELVE UN ARREGLO
-            $data=array_map('trim',$data); //SE LE APLICA UN ARRAY MAP A CADA DATO. TRIM ELIMINA LOS ESPACIOS VACIOS   
+            //$data=json_decode($data_input,true); //LO DECODIFICA DE JASON Y LO VUELVE UN ARREGLO
+            //$data=array_map('trim',$data); //SE LE APLICA UN ARRAY MAP A CADA DATO. TRIM ELIMINA LOS ESPACIOS VACIOS
+            if(is_array($data_input)){
+                $data = array_map('trim',$data_input);
+            }else{
+                $data = json_decode($data_input,true);
+                $data = array_map('trim',$data);
+            }   
             $rules=[ //ESTABLECE LAS REGLAS PARA GUARDAR EL OBJ
                 'placa' => 'required|unique:vehiculo', //TIPO REQUERIDO Y SOLO ACEPTA CAMPOS DE TEXTO
                 'marca'=>'required|alpha',
