@@ -6,6 +6,7 @@ use App\Models\Cliente;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 
+
 class ClienteController extends Controller
 {
       //Metodo GET para obtener todos los registros
@@ -31,7 +32,6 @@ class ClienteController extends Controller
                 $data = json_decode($data_input,true);
                 $data = array_map('trim',$data);
             }
-
             $rules = [
                 'id' => 'required|numeric',
                 'nombre' => 'required|alpha',
@@ -57,7 +57,7 @@ class ClienteController extends Controller
                 $response=array(
                     'status'=>201, //CODIGO PARA EL EXITO
                     'message'=>'Cliente creado Bv',
-                    'Vehiculo'=>$cliente
+                    'Cliente'=>$cliente
                 );
             }else{
                 $response=array(
