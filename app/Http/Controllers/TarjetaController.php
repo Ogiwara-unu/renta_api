@@ -36,7 +36,7 @@ class TarjetaController extends Controller
 
             $rules = [
                 'numero_tarjeta' => 'required|alpha_num',
-                'titular' => 'required|alpha',
+                'titular' => 'required|regex:/^[a-zA-Z\sáéíóúÁÉÍÓÚñÑ]+$/',
                 'fecha_vencimiento' => 'required|date',
                 'cvv' => 'required|alpha_num'
             ];
