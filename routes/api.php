@@ -48,7 +48,7 @@ Route::prefix('v1')->group(function () {
     Route::get('/renta/getRents', [RentaController::class, 'index'])->middleware(ApiAuthMiddleware::class);
     Route::get('/renta/getRent/{id}', [RentaController::class, 'show'])->middleware(ApiAuthMiddleware::class);
     Route::put('/renta/updateRent/{id}', [RentaController::class, 'update'])->middleware(ApiAuthMiddleware::class);
-    Route::delete('/vehiculo/destroyRent/{id}', [RentaController::class, 'destroy'])->middleware(ApiAuthMiddleware::class);
+    Route::delete('/renta/destroyRent/{id}', [RentaController::class, 'destroy'])->middleware(ApiAuthMiddleware::class);
     
     /* RUTAS TARJETA */
     Route::put('/tarjeta/updateCard/{id}', [TarjetaController::class, 'update'])->middleware(ApiAuthMiddleware::class);
