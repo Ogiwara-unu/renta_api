@@ -98,23 +98,30 @@ class LicenciaController extends Controller
     }
 
 
-    public function destroy($id){
-        if(isset($id_licencia)){
-            $deleted=Licencia::where('id',$id)->delete();
-            if($deleted){
-                $response=array(
-                    'status'=>200,
-                    'message'=>'licencia eliminada'
-                );
-            }
-        }else{
-            $response=array(
-                'status'=>400,
-                'message'=>'No se pudo eliminar el recurso,compruebe que exista'
-            );  
+    public function destroy($id) {
+        $licencia = Licencia::find($id);
+        if ($licencia) {
+          $deleted = $licencia->delete();
+          if ($deleted) {
+            $response = [
+              'status' => 200,
+              'message' => 'Licencia eliminada con éxito.'
+            ];
+          } else {
+            $response = [
+              'status' => 500,
+              'message' => 'Error al eliminar la licencia.'
+            ];
+          }
+        } else {
+          $response = [
+            'status' => 400,
+            'message' => 'No se pudo eliminar la licencia, compruebe que exista.'
+          ];
         }
-        return response()->json($response,$response['status']);
-    }
+        return response()->json($response, $response['status']);
+      }
+      
 
     public function update(Request $request, $id){
         // Obtener los datos de la solicitud
