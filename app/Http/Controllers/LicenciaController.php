@@ -121,7 +121,6 @@ class LicenciaController extends Controller
         }
         return response()->json($response, $response['status']);
       }
-      
 
     public function update(Request $request, $id){
         // Obtener los datos de la solicitud

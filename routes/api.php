@@ -27,7 +27,7 @@ Route::prefix('v1')->group(function () {
 
     /* RUTAS LICENCIA */
     Route::post('/licencia/upload', [LicenciaController::class,'uploadImage'])->middleware(ApiAuthMiddleware::class);
-    Route::get('/licencia/getImage/{filename}', [LicenciaController::class,'getImage'])->middleware(ApiAuthMiddleware::class);
+    Route::get('/licencia/getImage/{filename}', [LicenciaController::class,'getImage']);
     Route::post('/licencia/add', [LicenciaController::class,'store'])->middleware(ApiAuthMiddleware::class);
     Route::get('/licencia/getLicenses', [LicenciaController::class, 'index'])->middleware(ApiAuthMiddleware::class);
     Route::get('/licencia/getLicense/{id}', [LicenciaController::class, 'show'])->middleware(ApiAuthMiddleware::class);
