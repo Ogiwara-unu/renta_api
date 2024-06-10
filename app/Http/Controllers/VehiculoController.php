@@ -44,7 +44,7 @@ class VehiculoController extends Controller
                 'kilometraje'=>'required|numeric', //INT
                 'anio'=>'required|alpha_num',
                 'estado'=>'required|alpha',
-                'img'=>'required|alpha_num'
+                'img'=>'required'
             ];
             $isValid=\validator($data,$rules);
             if(!$isValid->fails()){ //SI NO FALLA
@@ -133,7 +133,7 @@ class VehiculoController extends Controller
                 'kilometraje'=>'required|numeric',
                 'anio'=>'required|alpha_num',
                 'estado'=>'required|alpha',
-                'img'=>'required|alpha_num'
+                'img'=>'required'
             ];
             $isValid=Validator::make($data,$rules);
             if(!$isValid->fails()){

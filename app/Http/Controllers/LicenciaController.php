@@ -41,7 +41,7 @@ class LicenciaController extends Controller
                 'cliente_id' => 'required|numeric', 
                 'fecha_vencimiento' => 'required|date',
                 'tipo' => 'required|alpha',
-                'img' => 'required|alpha_num', 
+                'img' => 'required', 
             ];
 
             $isValid = \validator($data,$rules);
@@ -139,7 +139,7 @@ class LicenciaController extends Controller
             $rules = [
                 'fecha_vencimiento' => 'date',
                 'tipo' => 'alpha',
-                'img' => 'alpha_num',
+                'img' => '',
             ];
     
             // Validar los datos recibidos
