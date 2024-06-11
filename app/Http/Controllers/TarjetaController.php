@@ -148,25 +148,14 @@ class TarjetaController extends Controller
     
                 // Validar los datos de entrada
                 $rules = [
-                    'numero_tarjeta' => 'alpha_num',
                     'titular' => 'alpha',
                     'fecha_vencimiento' => 'date',
-                    'cvv' => 'alpha_num'
                 ];
     
                 $isValid = \validator($data, $rules);
     
                 if (!$isValid->fails()) {
-                    // Actualizar los campos de la tarjeta
-                    if (isset($data['numero_tarjeta'])) {
-                        $tarjeta->numero_tarjeta = Crypt::encryptString($data['numero_tarjeta']);
-                    }
-                    if (isset($data['cvv'])) {
-                        $tarjeta->cvv = Crypt::encryptString($data['cvv']);
-                    }
-                    if (isset($data['titular'])) {
-                        $tarjeta->titular = $data['titular'];
-                    }
+                    // Actualizar los campos de la tarjeta 
                     if (isset($data['fecha_vencimiento'])) {
                         $tarjeta->fecha_vencimiento = $data['fecha_vencimiento'];
                     }

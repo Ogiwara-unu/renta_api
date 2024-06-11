@@ -126,7 +126,7 @@ class UserController extends Controller
                 }
                 $rules = [
                     'name' => 'alpha_num',
-                    'email' => 'email|unique:users,email,'.$user->id,
+                    'email' => 'email',
                     'password' => 'alpha_num|min:6',
                     'rol' => 'alpha'
                 ];

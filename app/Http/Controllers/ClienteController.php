@@ -145,7 +145,7 @@ class ClienteController extends Controller
                     'primer_apellido' => 'alpha',
                     'segundo_apellido' => 'alpha',
                     'telefono' => 'alpha_num',
-                    'email' => 'email|unique:clientes,email,'.$cliente->id,
+                    'email' => 'email|unique:cliente',
                     'direccion' => 'alpha_num',
                     'fecha_nacimiento' => 'date'
                 ];

@@ -138,7 +138,7 @@ class LicenciaController extends Controller
             // Definir las reglas de validación
             $rules = [
                 'fecha_vencimiento' => 'date',
-                'tipo' => 'alpha',
+                'tipo' => 'alpha_num',
                 'img' => '',
             ];
     
